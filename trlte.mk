@@ -184,7 +184,6 @@ PRODUCT_PACKAGES += \
 # IR Blaster
 PRODUCT_PACKAGES += \
     android.hardware.ir@1.0-impl \
-    android.hardware.ir@1.0-service \
     consumerir.apq8084
 
 # IRSC
