@@ -108,29 +108,29 @@ on property:sys.boot_completed=1
     write /sys/module/cpu_boost/parameters/input_boost_ms 40
     write /dev/cpuctl/apps/cpu.notify_on_migrate 1
 
-        write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
-        write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor interactive
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor interactive
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor interactive
-        write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "interactive"
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "interactive"
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "interactive"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
     write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 300000
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 300000
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 300000
-        write /sys/module/msm_thermal/core_control/enabled 1
-        setprop ro.qualcomm.perf.cores_online 2
+    write /sys/module/msm_thermal/core_control/enabled 1
+    setprop ro.qualcomm.perf.cores_online 2
 
-        chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-        chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-        chown root system /sys/devices/system/cpu/mfreq
-        chmod 0220 /sys/devices/system/cpu/mfreq
-        chown root system /sys/devices/system/cpu/cpu1/online
-        chown root system /sys/devices/system/cpu/cpu2/online
-        chown root system /sys/devices/system/cpu/cpu3/online
-        chmod 0664 /sys/devices/system/cpu/cpu1/online
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chown root system /sys/devices/system/cpu/mfreq
+    chmod 0220 /sys/devices/system/cpu/mfreq
+    chown root system /sys/devices/system/cpu/cpu1/online
+    chown root system /sys/devices/system/cpu/cpu2/online
+    chown root system /sys/devices/system/cpu/cpu3/online
+    chmod 0664 /sys/devices/system/cpu/cpu1/online
     chmod 0664 /sys/devices/system/cpu/cpu2/online
     chmod 0664 /sys/devices/system/cpu/cpu3/online
 
-        # Change interactive sysfs permission
+    # Change interactive sysfs permission
     chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_rate
     chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_slack
     chown system system /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
@@ -206,19 +206,19 @@ on property:sys.boot_completed=1
     write /sys/devices/system/cpu/cpufreq/interactive/single_exit_time 99000
 
     # Default interactive governor parameters
-        write /sys/devices/system/cpu/cpufreq/interactive/param_index 0
-        write /sys/devices/system/cpu/cpufreq/interactive/io_is_busy 1
-        write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 20000
-        write /sys/devices/system/cpu/cpufreq/interactive/timer_slack 20000
-        write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 40000
-        write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 1190400
-        write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 99
-        write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay "20000 1400000:80000 1500000:40000 1700000:20000 2400000:40000"
-        write /sys/devices/system/cpu/cpufreq/interactive/target_loads "85 1400000:90 1700000:95 2400000:97"
-        write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 40000
-        write /sys/devices/system/cpu/cpufreq/interactive/bimc_hispeed_freq 556800
+    write /sys/devices/system/cpu/cpufreq/interactive/param_index 0
+    write /sys/devices/system/cpu/cpufreq/interactive/io_is_busy 1
+    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 20000
+    write /sys/devices/system/cpu/cpufreq/interactive/timer_slack 20000
+    write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 40000
+    write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 1190400
+    write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 99
+    write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay "20000 1400000:80000 1500000:40000 1700000:20000 2400000:40000"
+    write /sys/devices/system/cpu/cpufreq/interactive/target_loads "85 1400000:90 1700000:95 2400000:97"
+    write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 40000
+    write /sys/devices/system/cpu/cpufreq/interactive/bimc_hispeed_freq 556800
 
-        # Single Mode Parameter
+    # Single Mode Parameter
     write /sys/devices/system/cpu/cpufreq/interactive/param_index 1
     write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 20000
     write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 59000
@@ -249,13 +249,13 @@ on property:sys.boot_completed=1
     write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 300000
     write /sys/devices/system/cpu/cpufreq/interactive/param_index 0
 
-        # Change cpu-boost sysfs permission
-        chown system system /sys/module/cpu_boost/parameters/sync_threshold
-        chown system system /sys/module/cpu_boost/parameters/boost_ms
-        chmod 0660 /sys/module/cpu_boost/parameters/sync_threshold
+    # Change cpu-boost sysfs permission
+    chown system system /sys/module/cpu_boost/parameters/sync_threshold
+    chown system system /sys/module/cpu_boost/parameters/boost_ms
+    chmod 0660 /sys/module/cpu_boost/parameters/sync_threshold
     chmod 0660 /sys/module/cpu_boost/parameters/boost_ms
 
-        # Change bimc-boost sysfs permission
+    # Change bimc-boost sysfs permission
     chown system system /sys/module/qcom_cpufreq/parameters/boost_ms
     chmod 0660 /sys/module/qcom_cpufreq/parameters/boost_ms
 
@@ -268,5 +268,33 @@ on property:sys.boot_completed=1
     chmod 664 /sys/module/qpnp_power_on/parameters/reset_enabled
     chmod 664 /sys/module/qpnp_int/parameters/debug_mask
     chmod 664 /sys/module/lpm_levels/parameters/secdebug
+
+    # mdss schedule info debugging
+    write /d/tracing/events/irq/mdss_dsi_cmd_mdp_busy_start/enable 1
+    write /d/tracing/events/irq/mdss_dsi_cmd_mdp_busy_end/enable 1
+    write /d/tracing/events/irq/mdss_dsi_isr_start/enable 1
+    write /d/tracing/events/irq/mdss_dsi_isr_end/enable 1
+    write /d/tracing/events/irq/mdss_mdp_isr_start/enable 1
+    write /d/tracing/events/irq/mdss_mdp_isr_end/enable 1
+
+    # Volume down key(connect to PMIC RESIN) wakeup enable/disable
+    chown radio system /sys/power/volkey_wakeup
+    chmod 664 /sys/power/volkey_wakeup
+    write /sys/power/volkey_wakeup 0
+
+    # sys_sw.sa: postpone starting of mpdecision to prevent core-off problems. (w/a)
+    sleep 5
+    write /dev/kmsg "init.qcom.post_boot.sh: start mpdecision after 5 sec sleep"
+    rm -rf /data/system/default_values
+    start mpdecision
+    write sys/block/mmcblk0/bdi/read_ahead_kb 512
+    write /sys/block/sda/bdi/read_ahead_kb 512
+    write /sys/block/sdb/bdi/read_ahead_kb 512
+    write /sys/block/sdc/bdi/read_ahead_kb 512
+    write /sys/block/sdd/bdi/read_ahead_kb 512
+    write /sys/block/sde/bdi/read_ahead_kb 512
+    write /sys/block/sdf/bdi/read_ahead_kb 512
+    write /sys/block/sdg/bdi/read_ahead_kb 512
+    write /sys/block/sdh/bdi/read_ahead_kb 512
 
 
