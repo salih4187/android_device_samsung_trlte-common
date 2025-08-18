@@ -287,7 +287,7 @@ on property:sys.boot_completed=1
     write /dev/kmsg "init.qcom.post_boot.sh: start mpdecision after 5 sec sleep"
     rm -rf /data/system/default_values
     start mpdecision
-    write sys/block/mmcblk0/bdi/read_ahead_kb 512
+    write /sys/block/mmcblk0/bdi/read_ahead_kb 512
     write /sys/block/sda/bdi/read_ahead_kb 512
     write /sys/block/sdb/bdi/read_ahead_kb 512
     write /sys/block/sdc/bdi/read_ahead_kb 512
