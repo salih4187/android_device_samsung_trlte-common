@@ -32,6 +32,11 @@ import /system/vendor/etc/init/hw/init.target.rc
 on early-init
     setprop sys.boot_completed 0
 
+    mkdir /firmware 0771 system system
+    mkdir /firmware-modem 0771 system system
+    mkdir /cpdump 0771 system system
+    symlink /data/tombstones /tombstones
+
     mount debugfs debugfs /sys/kernel/debug
     chmod 0755 /sys/kernel/debug
     
@@ -179,6 +184,9 @@ on post-fs-data
     # Create directory used by the DASH client
     mkdir /data/misc/dash 0770 media audio
 
+    # Create directory used by display clients
+    mkdir /data/misc/display 0770 system graphics
+
     # Mounting of persist is moved to 'on emmc-fs' and 'on fs' sections
     # We chown/chmod /persist again so because mount is run as root + defaults
     chown system system /persist
@@ -213,6 +221,14 @@ on post-fs-data
     # Create the symlink to qcn wpa_supplicant folder for ar6000 wpa_supplicant
     mkdir /data/system 0775 system system
 
+    #Create directories for Location services
+    mkdir /data/misc/location 0770 gps gps
+    mkdir /data/misc/location/mq 0770 gps gps
+    mkdir /data/misc/location/xtwifi 0770 gps gps
+    mkdir /data/misc/location/gpsone_d 0770 system gps
+    mkdir /data/misc/location/quipc 0770 gps system
+    mkdir /data/misc/location/gsiff 0770 gps gps
+
     # Create directory from IMS services
     mkdir /data/shared 0755
     chown system system /data/shared
@@ -230,7 +246,8 @@ on post-fs-data
     # Create /data/time folder for time-services
     mkdir /data/time/ 0700 system system
 
-    mkdir /data/bluetooth 0770 bluetooth bluetooth
+    mkdir /data/audio/ 0770 media audio
+
     # Enable the setgid bit on the directory
     chmod 2770 /data/bluetooth
 
