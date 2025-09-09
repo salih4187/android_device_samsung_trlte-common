@@ -94,10 +94,6 @@ on post-fs
     rm /data/dalvik-cache/arm/system@framework@boot-telephony-common.vdex
     rm /data/dalvik-cache/arm/system@framework@boot-telephony-common.oat
 
-    # GPU
-    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 200000000
-    write /sys/class/kgsl/kgsl-3d0/max_gpuclk 600000000
-    
     # Mobicore
     export MC_AUTH_TOKEN_PATH /efs
 
@@ -242,14 +238,6 @@ on post-fs-data
     mkdir /data/data/media 0770 media media
 
     chown system radio /sys/module/mhi/parameters/mhi_uci_dump
-
-    # GPU
-    # unify sysfs node for GPU
-    chmod 0444 /sys/devices/platform/gpusysfs/gpu_clock
-    chmod 0644 /sys/devices/platform/gpusysfs/gpu_governor
-    chmod 0644 /sys/devices/platform/gpusysfs/fps
-    chown system shell /sys/devices/platform/gpusysfs/gpu_governor
-    chown system shell /sys/devices/platform/gpusysfs/fps
 
     # MHL
     chown system radio /sys/class/mhl/test_v2
@@ -542,30 +530,6 @@ on boot
 
     chown radio system /sys/devices/system/cpu/kernel_max
     chmod 664 /sys/devices/system/cpu/kernel_max
-
-    # GPU permission
-    chown radio system /sys/class/kgsl/kgsl-3d0/max_pwrlevel
-    chmod 664  /sys/class/kgsl/kgsl-3d0/max_pwrlevel
-    chown radio system /sys/class/kgsl/kgsl-3d0/min_pwrlevel
-    chmod 664  /sys/class/kgsl/kgsl-3d0/min_pwrlevel
-    chown radio system /sys/class/kgsl/kgsl-3d0/gpu_available_frequencies
-    chmod 664  /sys/class/kgsl/kgsl-3d0/gpu_available_frequencies
-
-    chown radio system /sys/class/kgsl/kgsl-3d0/default_pwrlevel
-    chown radio system /sys/class/kgsl/kgsl-3d0/idle_timer
-    chmod 664 /sys/class/kgsl/kgsl-3d0/default_pwrlevel
-    chmod 664 /sys/class/kgsl/kgsl-3d0/idle_timer
-
-    chown radio system /sys/class/devfreq/0.qcom,cpubw/available_frequencies
-    chmod 664 /sys/class/devfreq/0.qcom,cpubw/available_frequencies
-    chown radio system /sys/class/devfreq/0.qcom,cpubw/available_governors
-    chmod 664 /sys/class/devfreq/0.qcom,cpubw/available_governors
-    chown radio system /sys/class/devfreq/0.qcom,cpubw/governor
-    chmod 664 /sys/class/devfreq/0.qcom,cpubw/governor
-    chown radio system /sys/class/devfreq/0.qcom,cpubw/max_freq
-    chmod 664 /sys/class/devfreq/0.qcom,cpubw/max_freq
-    chown radio system /sys/class/devfreq/0.qcom,cpubw/min_freq
-    chmod 664 /sys/class/devfreq/0.qcom,cpubw/min_freq
 
     # for VR Performance
     chown system system /sys/class/kgsl/kgsl-3d0/dispatch/inflight
@@ -1317,9 +1281,6 @@ on property:sys.boot_completed=1
     chown system radio /sys/class/sec/sec_epen/epen_firm_version
     chown system radio /sys/class/sec/sec_epen/epen_delay_time
     chown system radio /sys/class/sec/sec_epen/boost_level
-
-    # Set idle GPU to 133 Mhz
-    write /sys/class/kgsl/kgsl-3d0/default_pwrlevel 7
 
     #Audience ES705 UART
     # Late chown to make sure the kernel can access the device
