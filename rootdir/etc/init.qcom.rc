@@ -37,8 +37,15 @@ on early-init
     
 on init
     # Set permissions for persist partition
-    # See storage config details at http://source.android.com/tech/storage/
-    mkdir /storage 0550 system sdcard_r
+    mkdir /persist 0771 system system
+
+    mkdir /preload 0771 system system
+
+    export EXTERNAL_STORAGE /sdcard
+
+    # Support legacy paths
+    symlink /sdcard /mnt/sdcard
+    symlink /sdcard /storage/sdcard0
 
     # Setup zram options
     write /sys/block/zram0/comp_algorithm lz4
@@ -117,6 +124,8 @@ on post-fs-data
     # We will remap this as /mnt/sdcard with the sdcard fuse tool
     mkdir /data/media 0775 media_rw media_rw
     chown media_rw media_rw /data/media
+
+    mkdir /data/misc/camera 0770 camera camera
 
     mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
 
@@ -336,9 +345,6 @@ on post-fs-data
     rm /data/data/com.android.providers.telephony/databases
     rm /data/data/com.android.providers.telephony/shared_prefs
 
-    chown system system /sys/class/flash/flash/flash_power
-    chmod 660 /sys/class/flash/flash/flash_power
-    trigger enable-low-power
     setprop vold.post_fs_data_done 1
 
 on early-boot
@@ -364,8 +370,7 @@ on early-boot
 on boot
 
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+
     chown bluetooth bluetooth /proc/bluetooth/sleep/proto
     chown bluetooth bluetooth /sys/module/hci_uart/parameters/ath_lpm
     chown bluetooth bluetooth /sys/module/hci_uart/parameters/ath_btwrite
@@ -373,27 +378,53 @@ on boot
     chown bluetooth bluetooth /sys/module/hci_smd/parameters/hcismd_set
     chmod 0660 /sys/module/bluetooth_power/parameters/power
     chmod 0660 /sys/module/hci_smd/parameters/hcismd_set
-    chmod 0660 /sys/class/rfkill/rfkill0/state
+
     chmod 0660 /proc/bluetooth/sleep/proto
-    chown bluetooth bluetooth /dev/ttyHS0
+
     chmod 0660 /sys/module/hci_uart/parameters/ath_lpm
     chmod 0660 /sys/module/hci_uart/parameters/ath_btwrite
-    chmod 0660 /dev/ttyHS0
+
     chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
     chmod 0660 /dev/ttyHS2
     chown bluetooth bluetooth /dev/ttyHS2
 
+    chmod 0660 /sys/class/rfkill/rfkill0/device/extldo
+
     # for BT MAC address
     mkdir /efs/bluetooth 0775 radio system
     # if already exist
     chown radio system /efs/bluetooth
     chmod 0775 /efs/bluetooth
+
+    # permissions for bluetooth.
     setprop ro.bt.bdaddr_path "/efs/bluetooth/bt_addr"
     chown bluetooth bluetooth ro.bt.bdaddr_path
-    chown bluetooth bluetooth /efs/bluetooth/bt_addr
-    chmod 0640 /efs/bluetooth/bt_addr
+    chown bluetooth bluetooth /dev/ttyHS0
+    chmod 0660 /dev/ttyHS0
+    chmod 0660 /sys/class/rfkill/rfkill0/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/device/extldo
+
+    # bluetooth LPM
+    chmod 0660 /proc/bluetooth/sleep/lpm
+    chmod 0220 /proc/bluetooth/sleep/btwrite
+    chown bluetooth bluetooth /proc/bluetooth/sleep/lpm
+    chown bluetooth bluetooth /proc/bluetooth/sleep/btwrite
+    chmod 0600 /dev/btlock
+    chown bluetooth bluetooth /dev/btlock
+    #Audience ES705 UART
+    mkdir /data/firmware
+    chmod 0770 /data/firmware
+    chown system system /data/firmware
+    chmod 0660 /dev/ttyHS3
+    chown system system /dev/ttyHS3
+
+    #DBMD2
+    chmod 0660 /dev/dbd20
+    chown system system /dev/dbd20
 
     # Permissions for usb_lock
     chown system radio /sys/class/android_usb/android0/usb_lock
@@ -401,23 +432,6 @@ on boot
     # For WiFi
     chown wifi wifi /dev/rfkill
     chmod 0600 /dev/rfkill
-
-    # Audience ES705 UART
-    mkdir /data/firmware
-    chmod 0660 /dev/ttyHS3
-    chmod 0770 /data/firmware
-    chown system system /data/firmware
-
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/device/extldo
-    chmod 0660 /sys/class/rfkill/rfkill0/device/extldo
-
-    # Bluetooth LPM
-    chmod 0220 /proc/bluetooth/sleep/lpm
-    chmod 0220 /proc/bluetooth/sleep/btwrite
-    chown bluetooth bluetooth /proc/bluetooth/sleep/lpm
-    chown bluetooth bluetooth /proc/bluetooth/sleep/btwrite
-    chmod 0600 /dev/btlock
-    chown bluetooth bluetooth /dev/btlock
 
     # Create QMUX deamon socket area
     mkdir /dev/socket/qmux_radio 0770 radio radio
@@ -507,10 +521,6 @@ on boot
     # Set the default message loglevel to KERN_INFO
     # modified by SEC, SEC use a loglevel path with another way.
     # write /proc/sys/kernel/printk "6 6 1 7"
-
-    # Flash storage isn't a good entropy source, and only causes locking
-    # overhead in the kernel. Turn it off.
-    write /sys/block/mmcblk0/queue/add_random 0
 
     # MUIC
     chown radio system /sys/class/sec/switch/usb_sel
@@ -850,17 +860,6 @@ on boot
     chown system radio /sys/class/sensors/bodytemp_sensor/name
     chown system radio /sys/class/sensors/bodytemp_sensor/raw_data
 
-    # Configure the cpu-boost module
-    write /sys/module/cpu_boost/parameters/input_boost 1
-    write /sys/module/msm_performance/parameters/touchboost 0
-
-
-    # SMP scheduler
-    write /proc/sys/kernel/sched_upmigrate 85
-    write /proc/sys/kernel/sched_downmigrate 85
-    write /proc/sys/kernel/sched_boost 1
-    write /proc/sys/kernel/sched_upmigrate_min_nice 19
-
     # BGM_sensor
     chown system radio /sys/class/sensors/bio_sensor/name
     chown system radio /sys/class/sensors/bio_sensor/vendor
@@ -1105,6 +1104,16 @@ on boot
     # Permissions for gpio_keys
     chown system radio /sys/class/sec/sec_key/hall_irq_ctrl
 
+    # Define default initial receive window size in segments.
+    setprop net.tcp.default_init_rwnd 60
+    # Assign TCP buffer thresholds to be ceiling value of technology maximums
+    # Increased technology maximums should be reflected here.
+    write /proc/sys/net/core/rmem_max  1048576
+    write /proc/sys/net/core/wmem_max  2097152
+
+    write /sys/block/mmcblk0/queue/scheduler noop
+    copy /system/etc/battery_charging_temp.data /sys/class/power_supply/battery/batt_temp_table
+
     # Permission for HALL IC
     chown system radio /sys/class/sec/sec_key/hall_detect
 
@@ -1112,6 +1121,40 @@ on boot
     # Increased technology maximums should be reflected here.
     write /proc/sys/net/core/rmem_max  8388608
     write /proc/sys/net/core/wmem_max  8388608
+
+    #To allow interfaces to get v6 address when tethering is enabled
+    write /proc/sys/net/ipv6/conf/rmnet0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet1/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet2/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet3/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet4/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet5/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet6/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet7/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio1/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio2/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio3/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio4/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio5/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio6/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio7/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb1/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb2/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb3/accept_ra 2
+
+    # To prevent out of order acknowledgements from making
+    # connection tracking to treat them as not belonging to
+    # the connection they belong to.
+    # Otherwise, a weird issue happens in which some long
+    # connections on high-throughput links get dropped when
+    # an ack packet comes out of order
+    write /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal 1
+
+    # NFC local data and nfcee xml storage
+    mkdir /data/nfc 0770 nfc nfc
+    mkdir /data/nfc/param 0770 nfc nfc
 
     # HDCP 2.x
     mkdir /data/system/hdcp2 0775 system system
