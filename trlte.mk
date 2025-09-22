@@ -389,9 +389,9 @@ PRODUCT_COPY_FILES += \
 
 # seccomp policy hax: exclude code_coverage.arm.policy
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/seccomp/mod/mediacodec-arm.policy:$(TARGET_COPY_OUT_SYSTEM)/etc/seccomp_policy/mediacodec-arm.policy \
-    $(LOCAL_PATH)/seccomp/mod/mediaswcodec-arm.policy:$(TARGET_COPY_OUT_SYSTEM)/etc/seccomp_policy/mediaswcodec-arm.policy \
-    $(LOCAL_PATH)/seccomp/mod/mediaextractor-arm.policy:$(TARGET_COPY_OUT_SYSTEM)/etc/seccomp_policy/mediaextractor-arm.policy
+    $(LOCAL_PATH)/seccomp/mod/mediacodec-arm.policy:$(TARGET_COPY_OUT_SYSTEM)/etc/seccomp_policy/mediacodec.policy \
+    $(LOCAL_PATH)/seccomp/mod/mediaswcodec-arm.policy:$(TARGET_COPY_OUT_SYSTEM)/etc/seccomp_policy/mediaswcodec.policy \
+    $(LOCAL_PATH)/seccomp/mod/mediaextractor-arm.policy:$(TARGET_COPY_OUT_SYSTEM)/etc/seccomp_policy/mediaextractor.policy
 
 # Common Qualcomm
 $(call inherit-product, device/samsung/qcom-common/qcom-common.mk)
