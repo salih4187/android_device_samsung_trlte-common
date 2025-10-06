@@ -522,6 +522,33 @@ on boot
 
     chown radio radio /dev/subsys_esoc0
 
+    # Assign TCP buffer thresholds to be ceiling value of technology maximums
+    # Increased technology maximums should be reflected here.
+    write /proc/sys/net/core/rmem_max  8388608
+    write /proc/sys/net/core/wmem_max  8388608
+
+    #To allow interfaces to get v6 address when tethering is enabled
+    write /proc/sys/net/ipv6/conf/rmnet0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet1/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet2/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet3/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet4/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet5/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet6/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet7/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio1/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio2/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio3/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio4/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio5/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio6/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio7/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb1/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb2/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb3/accept_ra 2
+
     # To prevent out of order acknowledgements from making
     # connection tracking to treat them as not belonging to
     # the connection they belong to.
@@ -539,6 +566,10 @@ on boot
     # modified by SEC, SEC use a loglevel path with another way.
     # write /proc/sys/kernel/printk "6 6 1 7"
 
+    # Flash storage isn't a good entropy source, and only causes locking
+    # overhead in the kernel. Turn it off.
+    write /sys/block/mmcblk0/queue/add_random 0
+
     # MUIC
     chown radio system /sys/class/sec/switch/usb_sel
     chown radio system /sys/class/sec/switch/usb_state
@@ -548,19 +579,36 @@ on boot
     chown system radio /sys/class/sec/switch/adc
     chown system radio /sys/class/sec/switch/otg_test
 
-    # sii8620 MHL adapter
+    # bcmtch15xxx TSP
     chown system system /sys/class/input/input0/enabled
 
     # Fingerprint
     mkdir /dev/validity 0770 system system
     mkdir /data/validity 0770 system system
 
+    # SEC DVFS sysfs node
+    chown radio system /sys/power/cpufreq_max_limit
+    chown radio system /sys/power/cpufreq_min_limit
+    chown radio system /sys/power/cpufreq_table
+    chmod 664 /sys/power/cpufreq_max_limit
+    chmod 664 /sys/power/cpufreq_min_limit
+    chmod 664 /sys/power/cpufreq_table
+
     chown radio system /sys/devices/system/cpu/kernel_max
     chmod 664 /sys/devices/system/cpu/kernel_max
+
+    chown radio system /sys/class/kgsl/kgsl-3d0/max_pwrlevel
+    chmod 664  /sys/class/kgsl/kgsl-3d0/max_pwrlevel
+    chown radio system /sys/class/kgsl/kgsl-3d0/min_pwrlevel
+    chmod 664  /sys/class/kgsl/kgsl-3d0/min_pwrlevel
+    chown radio system /sys/class/kgsl/kgsl-3d0/gpu_available_frequencies
+    chmod 664  /sys/class/kgsl/kgsl-3d0/gpu_available_frequencies
 
     # for VR Performance
     chown system system /sys/class/kgsl/kgsl-3d0/dispatch/inflight
     chmod 0664  /sys/class/kgsl/kgsl-3d0/dispatch/inflight
+    chown system system /sys/class/kgsl/kgsl-3d0/dispatch/inflight_low_latency
+    chmod 0664  /sys/class/kgsl/kgsl-3d0/dispatch/inflight_low_latency
 
     # SEC PM sysfs node
     chown system radio /sys/devices/system/soc/soc0/soc_iddq
@@ -683,32 +731,35 @@ on boot
 
     # Permissions for InputDevices.
     chown system radio /sys/class/sec/tsp/cmd
-    chown system system /sys/class/sec/sec_touchkey/brightness
     chmod 0660 /sys/class/sec/tsp/input/enabled
     chown system system /sys/class/sec/tsp/input/enabled
 
+    chmod 0660 /sys/class/sec/sec_touchkey/input/enabled
+    chown system system /sys/class/sec/sec_touchkey/input/enabled
+    chown system system /sys/class/sec/sec_touchkey/brightness
+
     # Permissions for Camera
-    chown system system /sys/class/camera/rear/rear_camfw
-    chown system system /sys/class/camera/rear/rear_checkfw_user
-    chown system system /sys/class/camera/rear/rear_checkfw_factory
-    chown system system /sys/class/camera/rear/rear_camfw_full
-    chown system system /sys/class/camera/rear/rear_camfw_load
-    chown system system /sys/class/camera/rear/rear_latest_module_check
-    chown system system /sys/class/camera/rear/rear_camtype
-    chown system system /sys/class/camera/rear/rear_corever
-    chown system system /sys/class/camera/rear/rear_companionfw_full
-    chown system system /sys/class/camera/rear/rear_calcheck
-    chown system system /sys/class/camera/rear/rear_fwcheck
-    chown system system /sys/class/camera/rear/isp_core
-    chown system system /sys/class/camera/flash/rear_flash
-    chown system system /sys/class/camera/front/front_camfw
-    chown system system /sys/class/camera/front/front_camtype
-    chown system system /sys/class/camera/ois/selftest
-    chown system system /sys/class/camera/ois/ois_power
-    chown system system /sys/class/camera/ois/ois_rawdata
-    chown system system /sys/class/camera/ois/oisfw
-    chown system system /sys/class/camera/ois/ois_diff
-    chown system system /sys/class/camera/ois/ois_exif
+   chown system radio /sys/class/camera/rear/rear_camfw
+   chown system radio /sys/class/camera/rear/rear_checkfw_user
+   chown system radio /sys/class/camera/rear/rear_checkfw_factory
+   chown system radio /sys/class/camera/rear/rear_camfw_full
+   chown system radio /sys/class/camera/rear/rear_camfw_load
+   chown system radio /sys/class/camera/rear/rear_latest_module_check
+   chown system radio /sys/class/camera/rear/rear_camtype
+   chown system radio /sys/class/camera/rear/rear_corever
+   chown system radio /sys/class/camera/rear/rear_companionfw_full
+   chown system radio /sys/class/camera/rear/rear_calcheck
+   chown system radio /sys/class/camera/rear/rear_fwcheck
+   chown system radio /sys/class/camera/rear/isp_core
+   chown system radio /sys/class/camera/flash/rear_flash
+   chown system radio /sys/class/camera/front/front_camfw
+   chown system radio /sys/class/camera/front/front_camtype
+   chown system radio /sys/class/camera/ois/selftest
+   chown system radio /sys/class/camera/ois/ois_power
+   chown system radio /sys/class/camera/ois/ois_rawdata
+   chown system radio /sys/class/camera/ois/oisfw
+   chown system radio /sys/class/camera/ois/ois_diff
+   chown system radio /sys/class/camera/ois/ois_exif
 
     # Permissions for Audio
     chown system system /sys/devices/fe12f000.slim/es705-codec-gen0/keyword_grammar_path
@@ -1121,57 +1172,8 @@ on boot
     # Permissions for gpio_keys
     chown system radio /sys/class/sec/sec_key/hall_irq_ctrl
 
-    # Define default initial receive window size in segments.
-    setprop net.tcp.default_init_rwnd 60
-    # Assign TCP buffer thresholds to be ceiling value of technology maximums
-    # Increased technology maximums should be reflected here.
-    write /proc/sys/net/core/rmem_max  1048576
-    write /proc/sys/net/core/wmem_max  2097152
-
-    write /sys/block/mmcblk0/queue/scheduler noop
-    copy /system/etc/battery_charging_temp.data /sys/class/power_supply/battery/batt_temp_table
-
     # Permission for HALL IC
     chown system radio /sys/class/sec/sec_key/hall_detect
-
-    # Assign TCP buffer thresholds to be ceiling value of technology maximums
-    # Increased technology maximums should be reflected here.
-    write /proc/sys/net/core/rmem_max  8388608
-    write /proc/sys/net/core/wmem_max  8388608
-
-    #To allow interfaces to get v6 address when tethering is enabled
-    write /proc/sys/net/ipv6/conf/rmnet0/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet1/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet2/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet3/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet4/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet5/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet6/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet7/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio0/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio1/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio2/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio3/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio4/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio5/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio6/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio7/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb0/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb1/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb2/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb3/accept_ra 2
-
-    # To prevent out of order acknowledgements from making
-    # connection tracking to treat them as not belonging to
-    # the connection they belong to.
-    # Otherwise, a weird issue happens in which some long
-    # connections on high-throughput links get dropped when
-    # an ack packet comes out of order
-    write /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal 1
-
-    # NFC local data and nfcee xml storage
-    mkdir /data/nfc 0770 nfc nfc
-    mkdir /data/nfc/param 0770 nfc nfc
 
     # HDCP 2.x
     mkdir /data/system/hdcp2 0775 system system
