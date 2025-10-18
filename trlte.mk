@@ -390,7 +390,7 @@ PRODUCT_COPY_FILES += \
 # seccomp policy hax: exclude code_coverage.arm.policy
 $(shell cp -r device/samsung/trlte-common/seccomp/mod/mediacodec-arm.policy frameworks/av/services/mediacodec/seccomp_policy/mediacodec-arm.policy)
 $(shell cp -r device/samsung/trlte-common/seccomp/mod/mediaswcodec-arm.policy frameworks/av/services/mediacodec/seccomp_policy/mediaswcodec-arm.policy)
-$(shell cp -r device/samsung/trlte-common/seccomp/mod/mediaextractor-arm.policy frameworks/av/services/mediaextractor/seccomp_policy/mediacodec-arm.policy)
+$(shell cp -r device/samsung/trlte-common/seccomp/mod/mediaextractor-arm.policy frameworks/av/services/mediaextractor/seccomp_policy/mediaextractor-arm.policy)
 
 # Common Qualcomm
 $(call inherit-product, device/samsung/qcom-common/qcom-common.mk)
