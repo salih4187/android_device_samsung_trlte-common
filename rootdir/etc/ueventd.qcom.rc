@@ -167,6 +167,7 @@ subsystem msm_camera
 /dev/ttyGS0               0660   system     system
 /dev/i2c-5                0660   media       media
 /dev/voice_svc            0660   system     audio
+/dev/avtimer              0660   system     audio
 
 # Fingerprint
 /dev/vfsspi               0660   system     system
