@@ -74,215 +74,38 @@ on property:sys.boot_completed=1
     write /sys/devices/system/cpu/cpu2/online 1
     write /sys/devices/system/cpu/cpu3/online 1
 
-    write /sys/class/devfreq/0.qcom,cpubw/governor cpubw_hwmon
-    write /sys/class/devfreq/1.qcom,cpubw/governor cpubw_hwmon
-    write /sys/class/devfreq/2.qcom,cpubw/governor cpubw_hwmon
-    write /sys/class/devfreq/3.qcom,cpubw/governor cpubw_hwmon
-
-    # GPU permission
-    chown radio system /sys/class/kgsl/kgsl-3d0/default_pwrlevel
-    chown radio system /sys/class/kgsl/kgsl-3d0/idle_timer
-    chmod 0644 /sys/class/kgsl/kgsl-3d0/default_pwrlevel
-    chmod 0644 /sys/class/kgsl/kgsl-3d0/idle_timer
-
-    # Change cpubw sysfs permission and setting
-    chown radio system /sys/class/devfreq/0.qcom,cpubw/available_frequencies
-    chown radio system /sys/class/devfreq/0.qcom,cpubw/available_governors
-    chown radio system /sys/class/devfreq/0.qcom,cpubw/governor
-    chown radio system /sys/class/devfreq/0.qcom,cpubw/max_freq
-    chown radio system /sys/class/devfreq/0.qcom,cpubw/min_freq
-    chmod 0664 /sys/class/devfreq/0.qcom,cpubw/available_frequencies
-    chmod 0664 /sys/class/devfreq/0.qcom,cpubw/available_governors
-    chmod 0664 /sys/class/devfreq/0.qcom,cpubw/governor
-    chmod 0664 /sys/class/devfreq/0.qcom,cpubw/max_freq
-    chmod 0664 /sys/class/devfreq/0.qcom,cpubw/min_freq
-
-    # Krait BUS DCVS
-    write /dev/kmsg "PM: set(keep) cpubw as msm_cpufreq"
-
-    # sync threshold
-    write /sys/module/cpu_boost/parameters/sync_threshold 1497600
-
-    write /sys/module/cpu_boost/parameters/boost_ms 10
-    write /sys/module/cpu_boost/parameters/input_boost_freq 0
-    write /sys/module/cpu_boost/parameters/input_boost_ms 40
-    write /dev/cpuctl/apps/cpu.notify_on_migrate 1
-
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
     write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "interactive"
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "interactive"
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "interactive"
+    write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay "20000 1400000:40000 1700000:20000"
+    write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 90
+    write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 1497600
+    write /sys/devices/system/cpu/cpufreq/interactive/target_loads "85 1500000:90 1800000:70"
+    write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 40000
+    write /sys/module/qcom_cpufreq/parameters/boost_ms 20
+    write /sys/module/cpu_boost/parameters/sync_threshold 1728000
+    write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 100000
+    write /sys/module/cpu_boost/parameters/input_boost_freq 1497600
+    write /sys/module/cpu_boost/parameters/input_boost_ms 40
+    write /dev/cpuctl/apps/cpu.notify_on_migrate 1
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
     write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 300000
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 300000
     write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 300000
     write /sys/module/msm_thermal/core_control/enabled 1
-    setprop ro.qualcomm.perf.cores_online 2
-
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
     chown root system /sys/devices/system/cpu/mfreq
-    chmod 0220 /sys/devices/system/cpu/mfreq
+    chmod 220 /sys/devices/system/cpu/mfreq
     chown root system /sys/devices/system/cpu/cpu1/online
     chown root system /sys/devices/system/cpu/cpu2/online
     chown root system /sys/devices/system/cpu/cpu3/online
-    chmod 0664 /sys/devices/system/cpu/cpu1/online
-    chmod 0664 /sys/devices/system/cpu/cpu2/online
-    chmod 0664 /sys/devices/system/cpu/cpu3/online
+    chmod 664 /sys/devices/system/cpu/cpu1/online
+    chmod 664 /sys/devices/system/cpu/cpu2/online
+    chmod 664 /sys/devices/system/cpu/cpu3/online
 
-    # Change interactive sysfs permission
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_rate
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_slack
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/target_loads
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/boost
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/input_boost
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/enforced_mode
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/mode
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/multi_enter_load
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/multi_enter_time
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/multi_exit_load
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/multi_exit_time
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/param_index
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/single_enter_load
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/single_enter_time
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/single_exit_load
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/single_exit_time
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/sync_freq
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_freq
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_load
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/bimc_hispeed_freq
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/timer_rate
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/timer_slack
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/target_loads
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boost
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/input_boost
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/bimc_hispeed_freq
-
-    # Mode Change Condition
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/param_index
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/multi_enter_load
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/multi_enter_time
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/multi_exit_load
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/multi_exit_time
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/single_enter_load
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/single_enter_time
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/single_exit_load
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/single_exit_time
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/enforce_mode
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/mode
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/sync_freq
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_freq
-    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_load
-
-    # Permissions for Audio
-    chown system system /sys/devices/fe1af000.slim/es705-codec-gen0/keyword_grammar_path
-    chown system system /sys/devices/fe1af000.slim/es705-codec-gen0/keyword_net_path
-    chown system system /sys/devices/fe1af000.slim/es704-codec-gen0/keyword_grammar_path
-    chown system system /sys/devices/fe1af000.slim/es704-codec-gen0/keyword_net_path
-
-    # Set Mode Change Condition
-    write /sys/devices/system/cpu/cpufreq/interactive/multi_enter_load 314
-    write /sys/devices/system/cpu/cpufreq/interactive/multi_enter_time 99000
-    write /sys/devices/system/cpu/cpufreq/interactive/multi_exit_load 83
-    write /sys/devices/system/cpu/cpufreq/interactive/multi_exit_time 299000
-    write /sys/devices/system/cpu/cpufreq/interactive/single_enter_load 83
-    write /sys/devices/system/cpu/cpufreq/interactive/single_enter_time 199000
-    write /sys/devices/system/cpu/cpufreq/interactive/single_exit_load 55
-    write /sys/devices/system/cpu/cpufreq/interactive/single_exit_time 99000
-
-    # Default interactive governor parameters
-    write /sys/devices/system/cpu/cpufreq/interactive/param_index 0
-    write /sys/devices/system/cpu/cpufreq/interactive/io_is_busy 1
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 20000
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_slack 20000
-    write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 40000
-    write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 1190400
-    write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 99
-    write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay "20000 1400000:80000 1500000:40000 1700000:20000 2400000:40000"
-    write /sys/devices/system/cpu/cpufreq/interactive/target_loads "85 1400000:90 1700000:95 2400000:97"
-    write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 40000
-    write /sys/devices/system/cpu/cpufreq/interactive/bimc_hispeed_freq 556800
-
-    # Single Mode Parameter
-    write /sys/devices/system/cpu/cpufreq/interactive/param_index 1
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 20000
-    write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 59000
-    write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 1497600
-    write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 95
-    write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay 19000
-    write /sys/devices/system/cpu/cpufreq/interactive/target_loads "60 800000:65 1400000:65 1700000:75"
-    write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 150000
-
-    # Multi Mode Parameter
-    write /sys/devices/system/cpu/cpufreq/interactive/param_index 2
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 20000
-    write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 79000
-    write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 1728000
-    write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 90
-    write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay 19000
-    write /sys/devices/system/cpu/cpufreq/interactive/target_loads "50 800000:60 1400000:65"
-    write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 200000
-
-    # Single & Multi Mode Parameter
-    write /sys/devices/system/cpu/cpufreq/interactive/param_index 3
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 20000
-    write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 99000
-    write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 1958400
-    write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 85
-    write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay 19000
-    write /sys/devices/system/cpu/cpufreq/interactive/target_loads "50 1400000:60"
-    write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 300000
-    write /sys/devices/system/cpu/cpufreq/interactive/param_index 0
-
-    # Change cpu-boost sysfs permission
-    chown system system /sys/module/cpu_boost/parameters/sync_threshold
-    chown system system /sys/module/cpu_boost/parameters/boost_ms
-    chmod 0660 /sys/module/cpu_boost/parameters/sync_threshold
-    chmod 0660 /sys/module/cpu_boost/parameters/boost_ms
-
-    # Change bimc-boost sysfs permission
-    chown system system /sys/module/qcom_cpufreq/parameters/boost_ms
-    chmod 0660 /sys/module/qcom_cpufreq/parameters/boost_ms
-
-    # Change PM debug parameters permission
-    chown radio system /sys/module/qpnp_power_on/parameters/wake_enabled
-    chown radio system /sys/module/qpnp_power_on/parameters/reset_enabled
-    chown radio system /sys/module/qpnp_int/parameters/debug_mask
-    chown radio system /sys/module/lpm_levels/parameters/secdebug
-    chmod 664 /sys/module/qpnp_power_on/parameters/wake_enabled
-    chmod 664 /sys/module/qpnp_power_on/parameters/reset_enabled
-    chmod 664 /sys/module/qpnp_int/parameters/debug_mask
-    chmod 664 /sys/module/lpm_levels/parameters/secdebug
-
-    # mdss schedule info debugging
-    write /d/tracing/events/irq/mdss_dsi_cmd_mdp_busy_start/enable 1
-    write /d/tracing/events/irq/mdss_dsi_cmd_mdp_busy_end/enable 1
-    write /d/tracing/events/irq/mdss_dsi_isr_start/enable 1
-    write /d/tracing/events/irq/mdss_dsi_isr_end/enable 1
-    write /d/tracing/events/irq/mdss_mdp_isr_start/enable 1
-    write /d/tracing/events/irq/mdss_mdp_isr_end/enable 1
-
-    # Volume down key(connect to PMIC RESIN) wakeup enable/disable
-    chown radio system /sys/power/volkey_wakeup
-    chmod 664 /sys/power/volkey_wakeup
-    write /sys/power/volkey_wakeup 0
-
-    # sys_sw.sa: postpone starting of mpdecision to prevent core-off problems. (w/a)
+    # Post-setup services
     rm /data/system/default_values
     start mpdecision
     write /sys/block/mmcblk0/bdi/read_ahead_kb 512
