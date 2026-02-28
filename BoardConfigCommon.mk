@@ -124,6 +124,7 @@ TARGET_KERNEL_ADDITIONAL_FLAGS := \
 # Legacy BLOB Support
 TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
     /system/bin/mediaserver=22 \
+    /system/vendor/bin/vcsFPService=22 \
     /system/vendor/bin/mm-qcamera-daemon=22 \
     /system/vendor/bin/hw/rild=27
 
