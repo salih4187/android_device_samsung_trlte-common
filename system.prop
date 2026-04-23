@@ -31,7 +31,7 @@ camera2.portability.force_api=1
 ro.charger.disable_init_blank=true
 
 # Dalvik heap
-dalvik.vm.heapstartsize=8m
+dalvik.vm.heapstartsize=16m
 dalvik.vm.heapgrowthlimit=256m
 dalvik.vm.heapsize=512m
 dalvik.vm.heaptargetutilization=0.75
