@@ -1195,6 +1195,7 @@ service mpdecision /system/vendor/bin/mpdecision --avg_comp
     class main
     user root
     group root readproc
+    disabled
 
 service sensorhubservice /system/vendor/bin/sensorhubservice
     class main
