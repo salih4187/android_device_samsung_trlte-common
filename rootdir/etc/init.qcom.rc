@@ -1240,7 +1240,7 @@ service adsprpcd /system/vendor/bin/adsprpcd
 service qcamerasvr /system/vendor/bin/mm-qcamera-daemon
     class main
     user camera
-    group camera system inet input graphics radio sdcard_rw sdcard_r media_rw shell log
+    group camera system inet input graphics
 
 service qseecomd /system/vendor/bin/qseecomd
     class core
