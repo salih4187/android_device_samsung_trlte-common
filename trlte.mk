@@ -112,6 +112,9 @@ PRODUCT_PACKAGES += \
     hwcomposer.apq8084 \
     memtrack.apq8084
 
+PRODUCT_PROPERTY_OVERRIDES += \
+    debug.sf.hw=0
+
 # Doze service
 PRODUCT_PACKAGES += \
     SamsungDoze
