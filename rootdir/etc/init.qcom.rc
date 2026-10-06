@@ -97,13 +97,6 @@ on fs
     mount none /system/etc/gps.conf /system/etc/gps_debug.conf bind
 
 on post-fs
-    # Increase max readahead size to 1024 KB
-    write /sys/block/mmcblk0/queue/read_ahead_kb 1024
-    write /sys/block/mmcblk1/queue/read_ahead_kb 1024
-    # for controlling write performance boosting
-    chown system radio /sys/block/mmcblk0/bkops_en
-    chmod 0664 /sys/block/mmcblk0/bkops_en
-
     # Remove dalvik files that cause modem issues
     rm /data/dalvik-cache/arm/system@framework@boot-telephony-common.art
     rm /data/dalvik-cache/arm/system@framework@boot-telephony-common.vdex
@@ -275,7 +268,7 @@ on post-fs-data
     # Gpio DVS
     chown radio system /sys/class/secgpio_check/secgpio_check_all/secgpio_ctrl
 
-#   mkdir /data/tombstones 0771 system system
+    mkdir /data/tombstones 0771 system system
     mkdir /tombstones/modem 0771 system system
     mkdir /tombstones/lpass 0771 system system
     mkdir /tombstones/wcnss 0771 system system
