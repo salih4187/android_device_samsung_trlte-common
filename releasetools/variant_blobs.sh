@@ -29,7 +29,10 @@ better_copy()
 }
 
 VAR_SELECT_HOOK=/tmp/install/bin/variant_blobs_hook.sh
+if [ "$VARIANT" = "duos" ] ; then
+else
 MIXER_PATHS_EUR=/tmp/install/bin/mixer_paths_eur.sh
+fi
 
 # Detect variant and copy its specific-blobs
 BOOTLOADER=`getprop ro.bootloader`
@@ -63,11 +66,14 @@ else
   exit 1
 fi
 
-if [ -f $MIXER_PATHS_EUR ] ; then
-  . $MIXER_PATHS_EUR
+if [ "$VARIANT" = "duos" ] ; then
+  echo "Our variant is duos, skipping mixer_paths_eur stage"
 else
+  if [ -f $MIXER_PATHS_EUR ] ; then
+    . $MIXER_PATHS_EUR
+  else
   echo "Could not find $MIXER_PATHS_EUR"
   exit 1
+  fi
 fi
-
 exit 0
